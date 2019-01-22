@@ -197,9 +197,9 @@ datatable(effectifs_et_frequences_domiciliation_epargne,
 
 Puis on procède au **regroupement des modalités** :
 
-* "divorcé" + "veuf" --> "divorcé/veuf"
+* "divorcé" + "veuf" --> **divorcé/veuf**
 
-* "de 10 à 100K épargne" + "plus de 100K épargne" --> "plus de 10K épargne"
+* "de 10 à 100K épargne" + "plus de 100K épargne" --> **plus de 10K épargne**
 
 On modifie la table "base_credit" de manière à prendre en compte ce regroupement.
 
@@ -252,6 +252,7 @@ datatable(affectifs_et_frequences_domiciliation_epargne_modifiee,
 
 ## Étape 3 - Régression logistique
 
+
 ### 3.1 Choix de la variable explicative
 
 \
@@ -259,38 +260,42 @@ La variable à expliquer sélectionnée est : **Type de Client**
 
 Dans la table **base_client**, on discrétise cette variable en changeant la valeur **bon client** à la valeur 1, et la valeur **mauvais client** à la valeur 0.
 
+---
+
 ### 3.2 Création des échantillons de test et d'apprentissage
 
 \
-On crée nos echantillons de test et d'apprentissage avec les valeurs 1 et 2.
-L'apprentissage se fait sur 75% de la population et la validation sur 25% de la population.
+On crée nos echantillons de test et d'apprentissage avec les valeurs 1 et 2.\
+L'**apprentissage** se fait sur **75% de la population** et la **validation** sur **25% de la population**.
+
+---
 
 ### 3.3 Choix des modalités de référence
 
 \
 On choisit les modalités de référence pour :
 
-* Age du client : "moins de 23 ans"
+* Age du client : **moins de 23 ans**
 
-* Situation familiale : "divorcé/veuf"
+* Situation familiale : **divorcé/veuf**
 
-* Ancienneté : "anc. 1 an ou moins"
+* Ancienneté : **anc. 1 an ou moins**
 
-* Domiciliation.du.salaire : "Non domicilié"
+* Domiciliation.du.salaire : **Non domicilié**
 
-* Domiciliation de l'épargne : "pas d'épargne"
+* Domiciliation de l'épargne : **pas d'épargne**
 
-* Profession : "cadre"
+* Profession : **cadre**
 
-* Moyenne en cours : "plus de 5 K encours"
+* Moyenne en cours : **plus de 5 K encours**
 
-* Moyenne des mouvements : "de 10 à 30K mouvt"
+* Moyenne des mouvements : **de 10 à 30K mouvt**
 
-* Cumul.des.débits : "plus de 100 débits"
+* Cumul.des.débits : **plus de 100 débits**
 
-* Autorisation.de.découvert : "découvert autorisé"
+* Autorisation.de.découvert : **découvert autorisé**
 
-* Interdiction.de.chéquier : "chéquier interdit"
+* Interdiction.de.chéquier : **chéquier interdit**
 
 ---
 
@@ -355,8 +360,11 @@ On calcule et affiche un résumé des coefficients utilisés pour la regression,
 summary(fit.glm)
 ```
 
+---
+
 ### 3.5 Données de test et d'entrainement
 
+\
 On procède maintenent à l'étape de prédiction, d'abord avec les données de test :
 
 ```{r}
@@ -377,9 +385,12 @@ class.glm2=as.numeric(predict.glm(fit.glm,tdata[,3:13],type="response")>=0.5)
 table(class.glm2,tdata[,2])
 ```
 
+---
+
 ### 3.6 Calcul des proportions pour la matrice de confusion
 
-Pour le calcul des proportions, nous avons choisi une valeur de seuil à 0.5, soit 50%.
+\
+Pour le calcul des proportions, nous avons choisi une **valeur de seuil à 0.5, soit 50%**.
 
 Proportion de bien classés (bon clients) sur les données de test :
 ```{r}
@@ -408,12 +419,12 @@ Proportion de bien classés (mauvais clients) sur les données d'entrainement :
 sum( score.glm2 < 0.5 & tdata[,2]==0)/sum(tdata[,2]==0)
 ```
 
-
+---
 
 ### 3.7 Affichage de la courbe de gain et de la courbe de ROC.
 
 \
-La courbe de ROC avait été traitée lors du premier envoi. C'est pourquoi nous l'avons laissée dans le document.Nous expliquerons cette courbe dans le prochain livrable de ce R-Markdown qui inclura la courbe de gain.
+La courbe de ROC avait été traitée lors du premier envoi. C'est pourquoi nous l'avons laissée dans le présent document. Nous expliquerons cette courbe dans le prochain livrable de ce R-Markdown, livrable qui devra aussi inclure la courbe de gain.
 
 ```{r}
 # Graduation des axes pour la representation de la courbe ROC
