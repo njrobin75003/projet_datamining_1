@@ -321,15 +321,15 @@ On choisit les modalités de référence pour :
 # Choix des modalites de reference
 base_credit$Age.du.client <- relevel(base_credit$Age.du.client, ref = "moins de 23 ans")
 base_credit$Situation.familiale <- relevel(base_credit$Situation.familiale, ref = "divorcé/veuf")
-#base_credit$Ancienneté <- relevel(base_credit$Ancienneté, ref = "anc. 1 an ou moins")
+base_credit$Ancienneté <- relevel(base_credit$Ancienneté, ref = "anc. 1 an ou moins")
 base_credit$Domiciliation.du.salaire <- relevel(base_credit$Domiciliation.du.salaire, ref = "Non domicilié")
 base_credit$Domiciliation.de.l.épargne <- relevel(base_credit$Domiciliation.de.l.épargne, ref = "pas d'épargne")
 base_credit$Profession <- relevel(base_credit$Profession, ref = "cadre")
 base_credit$Moyenne.encours <- relevel(base_credit$Moyenne.encours, ref = "plus de 5 K encours")
 base_credit$Moyenne.des.mouvements <- relevel(base_credit$Moyenne.des.mouvements, ref = "de 10 à 30K mouvt")
-#base_credit$Cumul.des.débits <- relevel(base_credit$Cumul.des.débits, ref = "plus de 100 débits")
-#base_credit$Autorisation.de.découvert <- relevel(base_credit$Autorisation.de.découvert, ref = "découvert autorisé")
-#base_credit$Interdiction.de.chéquier <- relevel(base_credit$Interdiction.de.chéquier, ref = "chéquier interdit")
+base_credit$Cumul.des.débits <- relevel(base_credit$Cumul.des.débits, ref = "plus de 100 débits")
+base_credit$Autorisation.de.découvert <- relevel(base_credit$Autorisation.de.découvert, ref = "découvert autorisé")
+base_credit$Interdiction.de.chéquier <- relevel(base_credit$Interdiction.de.chéquier, ref = "chéquier interdit")
 ```
 
 ---
