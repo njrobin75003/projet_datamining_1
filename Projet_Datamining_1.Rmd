@@ -1,13 +1,15 @@
 ---
-title: "MBA-ESG-MBDCDO-Data-Mining-R-Markdown-Cours-02-2018-11-12"
+title: "MBA-ESG-MBDCDO-Data-Mining-R-Markdown-Cours-02-et-03-2018-11-12"
 author: "Antoine GNIMASSOUN, Nicolas ROBIN"
 date: "23/01/2019"
-output: html_document
+output: 
+  html_document:
+    code_folding: hide
 ---
 
 ```{r global_options, include=FALSE}
 knitr::opts_chunk$set(fig.width=12, fig.height=8, fig.path='Figs/',
-                      echo=FALSE, warning=FALSE, message=FALSE)
+                      echo=TRUE, warning=FALSE, message=FALSE)
 ```
 \
 \
@@ -16,11 +18,11 @@ destiné au Data Mining et à l’analyse prédictive.
 
 Sont reproduites les 3 étapes principales suivantes :
 
-* Etape 1 : le calcul des statistiques descriptives.
+* **Étape 1 : le calcul des statistiques descriptives.**
 
-* Etape 2 : le groupement des modalités intéressantes.
+* **Étape 2 : le groupement des modalités intéressantes.**
 
-* Etape 3 : la régression logistique.
+* **Étape 3 : la régression logistique.**
 
 ---
 
@@ -260,6 +262,13 @@ La variable à expliquer sélectionnée est : **Type de Client**
 
 Dans la table **base_client**, on discrétise cette variable en changeant la valeur **bon client** à la valeur 1, et la valeur **mauvais client** à la valeur 0.
 
+```{r}
+# Discretisation de la variable a expliquer
+base_credit$Type.de.client<- recode(base_credit$Type.de.client,
+                                    "Bon client"= 1,
+                                    "Mauvais client"= 0)
+```
+
 ---
 
 ### 3.2 Création des échantillons de test et d'apprentissage
@@ -267,6 +276,17 @@ Dans la table **base_client**, on discrétise cette variable en changeant la val
 \
 On crée nos echantillons de test et d'apprentissage avec les valeurs 1 et 2.\
 L'**apprentissage** se fait sur **75% de la population** et la **validation** sur **25% de la population**.
+
+```{r}
+# On cree nos echantillons de test et d'apprentissage avec les valeurs 1 et 2
+ind <- sample(2, nrow(base_credit), replace=T, prob=c(0.75,0.25))
+
+# Training sur 75% de la population
+tdata<- base_credit[ind==1,]
+
+# Validation sur 25% de la population
+vdata<- base_credit[ind==2,]
+```
 
 ---
 
@@ -297,6 +317,21 @@ On choisit les modalités de référence pour :
 
 * Interdiction.de.chéquier : **chéquier interdit**
 
+```{r}
+# Choix des modalites de reference
+base_credit$Age.du.client <- relevel(base_credit$Age.du.client, ref = "moins de 23 ans")
+base_credit$Situation.familiale <- relevel(base_credit$Situation.familiale, ref = "divorcé/veuf")
+#base_credit$Ancienneté <- relevel(base_credit$Ancienneté, ref = "anc. 1 an ou moins")
+base_credit$Domiciliation.du.salaire <- relevel(base_credit$Domiciliation.du.salaire, ref = "Non domicilié")
+base_credit$Domiciliation.de.l.épargne <- relevel(base_credit$Domiciliation.de.l.épargne, ref = "pas d'épargne")
+base_credit$Profession <- relevel(base_credit$Profession, ref = "cadre")
+base_credit$Moyenne.encours <- relevel(base_credit$Moyenne.encours, ref = "plus de 5 K encours")
+base_credit$Moyenne.des.mouvements <- relevel(base_credit$Moyenne.des.mouvements, ref = "de 10 à 30K mouvt")
+#base_credit$Cumul.des.débits <- relevel(base_credit$Cumul.des.débits, ref = "plus de 100 débits")
+#base_credit$Autorisation.de.découvert <- relevel(base_credit$Autorisation.de.découvert, ref = "découvert autorisé")
+#base_credit$Interdiction.de.chéquier <- relevel(base_credit$Interdiction.de.chéquier, ref = "chéquier interdit")
+```
+
 ---
 
 ### 3.4 Estimation du modèle avec les donnees d'entrainement
@@ -310,33 +345,6 @@ La première variable n'est pas prise en compte, car il s'agit de l'**Identifian
 On utilise la fonction *glm()* pour utiliser le **modèle lineaire généralisé** pour faire la **régression logistique**.
 
 ```{r Regression_Logistique}
-# Discretisation de la variable a expliquer
-base_credit$Type.de.client<- recode(base_credit$Type.de.client,
-                                    "Bon client"= 1,
-                                    "Mauvais client"= 0)
-
-# On cree nos echantillons de test et d'apprentissage avec les valeurs 1 et 2
-ind <- sample(2, nrow(base_credit), replace=T, prob=c(0.75,0.25))
-
-# Training sur 75% de la population
-tdata<- base_credit[ind==1,]
-
-# Validation sur 25% de la population
-vdata<- base_credit[ind==2,]
-
-# Choix des modalites de reference
-base_credit$Age.du.client <- relevel(base_credit$Age.du.client, ref = "moins de 23 ans")
-base_credit$Situation.familiale <- relevel(base_credit$Situation.familiale, ref = "divorcé/veuf")
-base_credit$Ancienneté <- relevel(base_credit$Ancienneté, ref = "anc. 1 an ou moins")
-base_credit$Domiciliation.du.salaire <- relevel(base_credit$Domiciliation.du.salaire, ref = "Non domicilié")
-base_credit$Domiciliation.de.l.épargne <- relevel(base_credit$Domiciliation.de.l.épargne, ref = "pas d'épargne")
-base_credit$Profession <- relevel(base_credit$Profession, ref = "cadre")
-base_credit$Moyenne.encours <- relevel(base_credit$Moyenne.encours, ref = "plus de 5 K encours")
-base_credit$Moyenne.des.mouvements <- relevel(base_credit$Moyenne.des.mouvements, ref = "de 10 à 30K mouvt")
-base_credit$Cumul.des.débits <- relevel(base_credit$Cumul.des.débits, ref = "plus de 100 débits")
-base_credit$Autorisation.de.découvert <- relevel(base_credit$Autorisation.de.découvert, ref = "découvert autorisé")
-base_credit$Interdiction.de.chéquier <- relevel(base_credit$Interdiction.de.chéquier, ref = "chéquier interdit")
-
 # Estimation du modele avec les donnees d'entrainement
 # On prend comme variable explicative, la variable "Type.de.Client" (index 2)
 # Les autres variables sont considerees comme etant des variables explicatives (index 3 a 13).
@@ -365,7 +373,7 @@ summary(fit.glm)
 ### 3.5 Données de test et d'entrainement
 
 \
-On procède maintenent à l'étape de prédiction, d'abord avec les données de test :
+On procède maintenent à l'étape de **prédiction**, d'abord avec les **données de test** :
 
 ```{r}
 # Prediction avec les donnees de test
@@ -375,7 +383,8 @@ class.glm=as.numeric(predict.glm(fit.glm,vdata[,3:13],type="response")>=0.5)
 table(class.glm,vdata[,2])
 ```
 
-Ensuite avec les données d'entraînement :
+\
+Ensuite avec les **données d'entraînement** :
 
 ```{r}
 # Prediction avec les donnees d'entrainement.
@@ -392,7 +401,8 @@ table(class.glm2,tdata[,2])
 \
 Pour le calcul des proportions, nous avons choisi une **valeur de seuil à 0.5, soit 50%**.
 
-Proportion de bien classés (bon clients) sur les données de test :
+\
+Proportion de **bien classés (bon clients)** sur les **données de test** :
 ```{r}
 # ---------------------------------------------------------------------------------------------------
 # Calcul des proportions pour la matrice de confusion (on a choisi comme seuil 0.5)
@@ -401,19 +411,22 @@ Proportion de bien classés (bon clients) sur les données de test :
 sum( score.glm >= 0.5 & vdata[,2]==1)/sum(vdata[,2]==1)
 ```
 
-Proportion de bien classés (mauvais clients) sur les données de test :
+\
+Proportion de **bien classés (mauvais clients)** sur les **données de test** :
 ```{r}
 # Proportion de bien classes (mauvais clients) sur les donnees de test
 sum( score.glm < 0.5 & vdata[,2]==0)/sum(vdata[,2]==0)
 ```
 
-Proportion de bien classés (bon clients) sur les données d'entrainement :
+\
+Proportion de **bien classés (bon clients)** sur les **données d'entrainement** :
 ```{r}
 # Proportion de bien classes (bon clients) sur les donnees d'entrainement
 sum( score.glm2 >= 0.5 & tdata[,2]==1)/sum(tdata[,2]==1)
 ```
 
-Proportion de bien classés (mauvais clients) sur les données d'entrainement :
+\
+Proportion de **bien classés (mauvais clients)** sur les données d'entrainement** :
 ```{r}
 # Proportion de bien classes (mauvais clients) sur les donnees d'entrainement
 sum( score.glm2 < 0.5 & tdata[,2]==0)/sum(tdata[,2]==0)
@@ -424,7 +437,7 @@ sum( score.glm2 < 0.5 & tdata[,2]==0)/sum(tdata[,2]==0)
 ### 3.7 Affichage de la courbe de gain et de la courbe de ROC.
 
 \
-La courbe de ROC avait été traitée lors du premier envoi. C'est pourquoi nous l'avons laissée dans le présent document. Nous expliquerons cette courbe dans le prochain livrable de ce R-Markdown, livrable qui devra aussi inclure la courbe de gain.
+La courbe de ROC avait été traitée lors du premier envoi. C'est pourquoi nous l'avons laissée dans le présent document. Nous expliquerons cette courbe dans le prochain livrable de ce R-Markdown, livrable qui devra aussi inclure la courbe de gain. Si vous êtes d'accord, pouvez-vous nous faire déjà un retour sur cette courbe de manière à pouvoir y apporter des informations qui vous apparaissent comme étant manquantes ?
 
 ```{r}
 # Graduation des axes pour la representation de la courbe ROC
