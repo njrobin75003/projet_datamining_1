@@ -34,7 +34,7 @@ Espace_De_Travail_Antoine_Eric <- 'C:/Users/TBD...'
 Espace_De_Travail_Choisi <- Espace_De_Travail_Nicolas
 
 # Le nom du fichier de donnees a telecharger
-Fichier_de_donnees <- "base_credit.xls"
+Fichier_de_donnees <- "base_credit.xlsx"
 
 # Mise en place de l'espace de travail de l'environnement pour l'execution des scripts R.
 setwd(Espace_De_Travail_Choisi)
